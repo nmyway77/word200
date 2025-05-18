@@ -22,7 +22,6 @@
       background-color: white;
       color: #4CAF50;
     }
-    /* 의미 표시 박스를 상단에 고정 */
     #meaningBox {
       position: sticky;
       top: 60px;
@@ -336,17 +335,26 @@
           span.textContent = entry.word;
           span.className = 'wordItem';
           span.addEventListener('click', () => {
-            // 클릭 시 기존 텍스트 대체하여 하나의 의미만 표시
             meaningBox.textContent = `${entry.word} → ${entry.meaning}`;
-            // 발음
+
+            // 🔧 수정됨: 모바일에서도 정확한 영어 발음을 위해 voice 지정
             const utter = new SpeechSynthesisUtterance(entry.word);
             utter.lang = 'en-US';
+
+            const voices = speechSynthesis.getVoices();
+            utter.voice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Google')) 
+                       || voices.find(v => v.lang.startsWith('en')) 
+                       || null;
+
             speechSynthesis.speak(utter);
           });
           wordListDiv.appendChild(span);
         }
       });
     }
+
+    // 음성 리스트 로드 이후 실행 보장
+    window.speechSynthesis.onvoiceschanged = renderWords;
 
     showBtn.addEventListener('click', renderWords);
     renderWords();
