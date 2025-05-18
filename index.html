@@ -1,0 +1,355 @@
+ <!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>수능완성 2000 – 단어를 클릭해 보세요</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 5px 20px; }
+    #showWords {
+      margin-bottom: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: 2px solid #4CAF50;
+      border-radius: 8px;
+      cursor: pointer;
+      outline: none;
+      display: inline-block;
+    }
+    #showWords:hover {
+      background-color: white;
+      color: #4CAF50;
+    }
+    /* 의미 표시 박스를 상단에 고정 */
+    #meaningBox {
+      position: sticky;
+      top: 60px;
+      background: #fff;
+      padding: 10px;
+      font-size: 18px;
+      color: #333;
+      border-bottom: 1px solid #ccc;
+      margin-bottom: 10px;
+      border-radius: 4px;
+    }
+    #wordList { margin-top: 10px; }
+    .lessonHeading {
+      display: block;
+      margin: 15px 0 5px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .wordItem {
+      font-size: 20px;
+      cursor: pointer;
+      padding: 5px 10px;
+      background: #f0f0f0;
+      border-radius: 4px;
+      display: inline-block;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <button id="showWords">수능완성 2000 – 단어를 클릭해 보세요</button>
+  <div id="meaningBox">매일 연습해보세요.</div>
+  <div id="wordList"></div>
+
+  <script>
+    const dictionary = [
+      { heading: '1과 단어' },
+{ word: 'additional',    meaning: '추가적인' },
+{ word: 'adhere',        meaning: '고수하다, 들러붙다' },
+{ word: 'ambitious',     meaning: '야심 있는' },
+{ word: 'identify',      meaning: '확인하다, 식별하다' },
+{ word: 'aesthetic',     meaning: '미적인' },
+{ word: 'animate',       meaning: '생명을 불어넣다, 활기차게 하다' },
+{ word: 'accomplish',    meaning: '성취하다' },
+{ word: 'exhausted',     meaning: '기진맥진한' },
+{ word: 'marginalize',   meaning: '소외시키다' },
+{ word: 'fossil',        meaning: '화석' },
+{ word: 'process',       meaning: '과정, 처리하다' },
+{ word: 'distance',      meaning: '거리' },
+{ word: 'notable',       meaning: '주목할 만한' },
+{ word: 'performance',   meaning: '수행, 성과' },
+{ word: 'biological',    meaning: '생물학적인' },
+{ word: 'unionism',      meaning: '노동조합주의' },
+{ word: 'cognitive',     meaning: '인지의' },
+{ word: 'limit',         meaning: '한계, 제한' },
+{ word: 'incline',       meaning: '기울다, 경향이 있다' },
+{ word: 'appliance',     meaning: '가전제품, 기구' },
+{ word: 'organism',      meaning: '생물, 유기체' },
+{ word: 'certify',       meaning: '증명하다, 인증하다' },
+{ word: 'ambiguous',     meaning: '모호한' },
+{ word: 'commerce',      meaning: '상업, 무역' },
+{ word: 'individual',    meaning: '개인, 개인의' },
+{ word: 'innovate',      meaning: '혁신하다' },
+{ word: 'infinite',      meaning: '무한한' },
+{ word: 'distinguish',   meaning: '구별하다' },
+{ word: 'concern',       meaning: '걱정, 우려' },
+{ word: 'ceremony',      meaning: '의식, 예식' },
+{ word: 'fertilizer',    meaning: '비료' },
+{ word: 'term',          meaning: '용어, 기간' },
+{ word: 'occasion',      meaning: '경우, 특별한 일' },
+{ word: 'subconscious',  meaning: '잠재의식의' },
+{ word: 'material',      meaning: '물질, 재료' },
+{ word: 'retrieval',     meaning: '회수, 검색' },
+{ word: 'quantity',      meaning: '양, 수량' },
+{ word: 'quality',       meaning: '질, 품질' },
+{ word: 'fluctuate',     meaning: '변동하다' },
+{ word: 'stabilize',     meaning: '안정시키다' },
+
+      { heading: '2과 단어' },
+{ word: 'innate',       meaning: '타고난, 선천적인' },
+{ word: 'advance',      meaning: '전진하다, 발전시키다' },
+{ word: 'limb',         meaning: '사지, 큰 나뭇가지' },
+{ word: 'breed',        meaning: '번식하다, 기르다' },
+{ word: 'found',        meaning: '설립하다, 창립하다' },
+{ word: 'pervade',      meaning: '퍼지다, 만연하다' },
+{ word: 'deadline',     meaning: '마감일' },
+{ word: 'regard',       meaning: '~로 여기다, 존중하다' },
+{ word: 'pressure',     meaning: '압박, 압력' },
+{ word: 'rehearse',     meaning: '리허설하다, 연습하다' },
+{ word: 'nutrition',    meaning: '영양, 영양섭취' },
+{ word: 'community',    meaning: '공동체' },
+{ word: 'statement',    meaning: '진술, 발표' },
+{ word: 'efficacy',     meaning: '효능' },
+{ word: 'continuous',   meaning: '계속적인' },
+{ word: 'facility',     meaning: '시설, 설비' },
+{ word: 'startled',     meaning: '깜짝 놀란' },
+{ word: 'convince',     meaning: '설득하다, 확신시키다' },
+{ word: 'challenge',    meaning: '도전, 난제' },
+{ word: 'reasonable',   meaning: '합리적인' },
+{ word: 'defect',       meaning: '결점, 결함' },
+{ word: 'evidence',     meaning: '증거' },
+{ word: 'particular',   meaning: '특정한, 특별한' },
+{ word: 'implicit',     meaning: '암시된, 내포된' },
+{ word: 'efficient',    meaning: '효율적인' },
+{ word: 'effect',       meaning: '효과, 영향' },
+{ word: 'willing',      meaning: '기꺼이 ~하는' },
+{ word: 'attentive',    meaning: '주의 깊은, 세심한' },
+{ word: 'fiction',      meaning: '허구, 소설' },
+{ word: 'intensify',    meaning: '강화하다, 격렬해지다' },
+{ word: 'navigate',     meaning: '항해하다, 길을 찾다' },
+{ word: 'stock',        meaning: '재고, 주식' },
+{ word: 'focus',        meaning: '집중하다, 초점' },
+{ word: 'consequence',  meaning: '결과, 중요성' },
+{ word: 'contaminate',  meaning: '오염시키다' },
+{ word: 'collective',   meaning: '집단의, 공동의' },
+{ word: 'ascent',       meaning: '상승, 오르기' },
+{ word: 'assent',       meaning: '찬성하다, 동의하다' },
+{ word: 'surrender',    meaning: '항복하다, 포기하다' },
+{ word: 'resist',       meaning: '저항하다' },
+
+      { heading: '3과 단어' },
+  { word: 'ultimate', meaning: '궁극적인' },
+  { word: 'captive', meaning: '포로가 된' },
+  { word: 'calculate', meaning: '계산하다' },
+  { word: 'specific', meaning: '구체적인' },
+  { word: 'proceed', meaning: '진행하다' },
+  { word: 'renewable', meaning: '재생 가능한' },
+  { word: 'incredibly', meaning: '믿을 수 없을 정도로' },
+  { word: 'narrative', meaning: '이야기, 서술' },
+  { word: 'artifact', meaning: '인공물' },
+  { word: 'characterize', meaning: '특징 짓다' },
+  { word: 'behavior', meaning: '행동' },
+  { word: 'justify', meaning: '정당화하다' },
+  { word: 'portray', meaning: '묘사하다' },
+  { word: 'situation', meaning: '상황' },
+  { word: 'athlete', meaning: '운동선수' },
+  { word: 'enact', meaning: '제정하다' },
+  { word: 'expose', meaning: '노출시키다' },
+  { word: 'participate', meaning: '참여하다' },
+  { word: 'incident', meaning: '사건' },
+  { word: 'speculate', meaning: '추측하다' },
+  { word: 'prescribe', meaning: '처방하다' },
+  { word: 'strive', meaning: '노력하다' },
+  { word: 'chore', meaning: '허드렛일' },
+  { word: 'active', meaning: '활동적인' },
+  { word: 'environment', meaning: '환경' },
+  { word: 'motivate', meaning: '동기 부여하다' },
+  { word: 'utopian', meaning: '이상적인' },
+  { word: 'injure', meaning: '다치게 하다' },
+  { word: 'fee', meaning: '요금' },
+  { word: 'anthropology', meaning: '인류학' },
+  { word: 'tomb', meaning: '무덤' },
+  { word: 'benefit', meaning: '혜택' },
+  { word: 'precisely', meaning: '정확히' },
+  { word: 'ratio', meaning: '비율' },
+  { word: 'detail', meaning: '세부 사항' },
+  { word: 'pound', meaning: '파운드(무게 단위)' },
+  { word: 'mess', meaning: '엉망진창' },
+  { word: 'mass', meaning: '덩어리, 대중' },
+  { word: 'cease', meaning: '그만두다, 중지하다' },
+  { word: 'continue', meaning: '계속하다' },
+      { heading: '4과 단어' },
+  { word: 'shed', meaning: '흘리다, 떨어뜨리다' },
+  { word: 'demand', meaning: '요구하다' },
+  { word: 'slam', meaning: '세게 닫다, 쾅 닫다' },
+  { word: 'privilege', meaning: '특권' },
+  { word: 'suggest', meaning: '제안하다' },
+  { word: 'mercury', meaning: '수은' },
+  { word: 'weave', meaning: '짜다, 엮다' },
+  { word: 'offer', meaning: '제안하다' },
+  { word: 'depth', meaning: '깊이' },
+  { word: 'vegetarian', meaning: '채식주의자' },
+  { word: 'federal', meaning: '연방의' },
+  { word: 'species', meaning: '종' },
+  { word: 'infer', meaning: '추론하다' },
+  { word: 'deadly', meaning: '치명적인' },
+  { word: 'discourage', meaning: '낙담시키다, 방해하다' },
+  { word: 'seemingly', meaning: '겉보기에는' },
+  { word: 'communal', meaning: '공동의' },
+  { word: 'compel', meaning: '강요하다' },
+  { word: 'resource', meaning: '자원' },
+  { word: 'paradigm', meaning: '전형적인 예' },
+  { word: 'formulate', meaning: '공식화하다' },
+  { word: 'fulfill', meaning: '이행하다, 달성하다' },
+  { word: 'current', meaning: '현재의' },
+  { word: 'immerse', meaning: '몰두시키다, 담그다' },
+  { word: 'praise', meaning: '칭찬하다' },
+  { word: 'relate', meaning: '관련시키다, 말하다' },
+  { word: 'authority', meaning: '권위' },
+  { word: 'consolidate', meaning: '강화하다, 통합하다' },
+  { word: 'intervene', meaning: '개입하다' },
+  { word: 'merely', meaning: '단지, 그저' },
+  { word: 'stance', meaning: '입장, 태도' },
+  { word: 'archaeologist', meaning: '고고학자' },
+  { word: 'introduce', meaning: '소개하다' },
+  { word: 'anticipate', meaning: '예상하다' },
+  { word: 'crude', meaning: '대충의, 천연 그대로의' },
+  { word: 'predator', meaning: '포식자' },
+  { word: 'deflate', meaning: '공기를 빼다, 수축하다' },
+  { word: 'inflate', meaning: '부풀리다' },
+  { word: 'personal', meaning: '개인적인' },
+  { word: 'personnel', meaning: '직원, 인원' },
+      { heading: '5과 단어' },
+ { word: 'adequate', meaning: '충분한, 적절한' },
+  { word: 'symbolic', meaning: '상징적인' },
+  { word: 'trait', meaning: '특성' },
+  { word: 'opportunity', meaning: '기회' },
+  { word: 'legend', meaning: '전설' },
+  { word: 'fragment', meaning: '파편, 조각' },
+  { word: 'thorough', meaning: '철저한' },
+  { word: 'opposite', meaning: '반대의' },
+  { word: 'summarize', meaning: '요약하다' },
+  { word: 'instinct', meaning: '본능' },
+  { word: 'cell', meaning: '세포' },
+  { word: 'glance', meaning: '흘낏 보다' },
+  { word: 'disperse', meaning: '흩어지다, 분산시키다' },
+  { word: 'access', meaning: '접근, 접속' },
+  { word: 'criterion', meaning: '기준' },
+  { word: 'democratic', meaning: '민주적인' },
+  { word: 'analyze', meaning: '분석하다' },
+  { word: 'typical', meaning: '전형적인' },
+  { word: 'statistic', meaning: '통계' },
+  { word: 'slippery', meaning: '미끄러운' },
+  { word: 'inevitable', meaning: '불가피한' },
+  { word: 'prospect', meaning: '전망, 가능성' },
+  { word: 'proposition', meaning: '제안, 명제' },
+  { word: 'equivalent', meaning: '동등한, 상당하는' },
+  { word: 'credit', meaning: '신용, 학점' },
+  { word: 'intake', meaning: '섭취량, 흡입' },
+  { word: 'sharply', meaning: '날카롭게, 급격히' },
+  { word: 'confine', meaning: '제한하다, 가두다' },
+  { word: 'advantage', meaning: '이점, 유리' },
+  { word: 'disturb', meaning: '방해하다, 불안하게 하다' },
+  { word: 'schema', meaning: '개요, 도식' },
+  { word: 'feature', meaning: '특징' },
+  { word: 'desperate', meaning: '필사적인, 절망적인' },
+  { word: 'empirical', meaning: '경험적인, 실증적인' },
+  { word: 'experiment', meaning: '실험' },
+  { word: 'drawback', meaning: '결점, 단점' },
+  { word: 'extend', meaning: '연장하다, 확대하다' },
+  { word: 'extent', meaning: '정도, 범위' },
+  { word: 'leak', meaning: '새다, 누출' },
+  { word: 'lick', meaning: '핥다' },
+      { heading: '6과 단어' },
+      { word: 'apple',     meaning: '사과' },
+      { word: 'banana',    meaning: '바나나' },
+      { word: 'grape',     meaning: '포도' },
+      { heading: '7과 단어' },
+      { word: 'apple',     meaning: '사과' },
+      { word: 'banana',    meaning: '바나나' },
+      { word: 'grape',     meaning: '포도' },
+      { heading: '8과 단어' },
+      { word: 'delicious', meaning: '맛있는' },
+      { word: 'fruit',     meaning: '과일' },
+      { heading: '9과 단어' },
+      { word: 'apple',     meaning: '사과' },
+      { word: 'banana',    meaning: '바나나' },
+      { word: 'grape',     meaning: '포도' },
+      { heading: '10과 단어' },
+      { word: 'apple',     meaning: '사과' },
+      { word: 'banana',    meaning: '바나나' },
+      { word: 'grape',     meaning: '포도' },
+      { heading: '11과 단어' },
+      { word: 'delicious', meaning: '맛있는' },
+      { word: 'fruit',     meaning: '과일' },
+      { heading: '12과 단어' },
+      { word: 'apple',     meaning: '사과' },
+      { word: 'banana',    meaning: '바나나' },
+      { word: 'grape',     meaning: '포도' },
+      { heading: '13과 단어' },
+      { word: 'apple',     meaning: '사과' },
+      { word: 'banana',    meaning: '바나나' },
+      { word: 'grape',     meaning: '포도' },
+      { heading: '14과 단어' },
+      { word: 'delicious', meaning: '맛있는' },
+      { word: 'fruit',     meaning: '과일' },
+      { heading: '15과 단어' },
+      { word: 'apple',     meaning: '사과' },
+      { word: 'banana',    meaning: '바나나' },
+      { word: 'grape',     meaning: '포도' },
+      { heading: '16과 단어' },
+      { word: 'apple',     meaning: '사과' },
+      { word: 'banana',    meaning: '바나나' },
+      { word: 'grape',     meaning: '포도' },
+      { heading: '17과 단어' },
+      { word: 'delicious', meaning: '맛있는' },
+      { word: 'fruit',     meaning: '과일' },
+      { heading: '18과 단어' },
+      { word: 'apple',     meaning: '사과' },
+      { word: 'banana',    meaning: '바나나' },
+      { word: 'grape',     meaning: '포도' },
+      { heading: '2과 단어' },
+      { word: 'delicious', meaning: '맛있는' },
+      { word: 'fruit',     meaning: '과일' }
+    ];
+
+    const showBtn = document.getElementById('showWords');
+    const wordListDiv = document.getElementById('wordList');
+    const meaningBox = document.getElementById('meaningBox');
+
+    function renderWords() {
+      wordListDiv.innerHTML = '';
+      dictionary.forEach(entry => {
+        if (entry.heading) {
+          const h = document.createElement('div');
+          h.textContent = entry.heading;
+          h.className = 'lessonHeading';
+          wordListDiv.appendChild(h);
+        } else {
+          const span = document.createElement('span');
+          span.textContent = entry.word;
+          span.className = 'wordItem';
+          span.addEventListener('click', () => {
+            // 클릭 시 기존 텍스트 대체하여 하나의 의미만 표시
+            meaningBox.textContent = `${entry.word} → ${entry.meaning}`;
+            // 발음
+            const utter = new SpeechSynthesisUtterance(entry.word);
+            utter.lang = 'en-US';
+            speechSynthesis.speak(utter);
+          });
+          wordListDiv.appendChild(span);
+        }
+      });
+    }
+
+    showBtn.addEventListener('click', renderWords);
+    renderWords();
+  </script>
+</body>
+</html>
